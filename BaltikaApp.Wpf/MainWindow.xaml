@@ -42,13 +42,10 @@
                 <TextBlock Text="{Binding ConnectionSummary}" Margin="0,2,0,8" TextWrapping="Wrap"/>
                 <TextBlock Text="Статус БД:" FontWeight="SemiBold"/>
                 <TextBlock Text="{Binding DbStatus}" Margin="0,2,0,10" TextWrapping="Wrap"/>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                    <Button Content="Включить редактирование" Style="{StaticResource PrimaryButton}" Width="200"
-                            Command="{Binding EnableWriterCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                    <Button Content="⚙" Style="{StaticResource IconButton}" Margin="8,0,0,0"
-                            Command="{Binding ConnectionSettingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            ToolTip="Настройки подключения"/>
-                </StackPanel>
+                <Button Content="Включить редактирование" Style="{StaticResource PrimaryButton}" Margin="0,0,0,8"
+                        Command="{Binding EnableWriterCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="⚙ Настройки подключения" Style="{StaticResource AccentButton}" Margin="0,0,0,8"
+                        Command="{Binding ConnectionSettingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                 <Button Content="Вернуться в режим чтения" Style="{StaticResource NeutralButton}"
                         Command="{Binding DisableWriterCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                 <Button Content="Справочники" Style="{StaticResource AccentButton}" Margin="0,8,0,0"
