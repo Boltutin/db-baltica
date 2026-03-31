@@ -1,0 +1,28 @@
+# Build artifacts
+**/bin/
+**/obj/
+
+# IDE folders and user-specific files
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Cursor local metadata
+.cursor/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Local database dumps/backups (do not publish to GitHub)
+*.backup
+
+# Temporary screenshots and exports
+Screenshot_*.png
+
+# Local import/export helper scripts
+import-baltika.bat
+import-baltika.ps1
+export-baltika.bat
+export-baltika.ps1

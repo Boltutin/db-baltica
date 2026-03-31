@@ -1,0 +1,16 @@
+<Window x:Class="BaltikaApp.Wpf.ShipsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Суда" Icon="pack://application:,,,/Assets/AppIcon.ico" Height="600" Width="1100"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="10">
+        <StackPanel x:Name="ActionBar" DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="Обновить" Style="{StaticResource AccentButton}"  Width="120" Margin="0,0,8,0" Click="OnRefresh"/>
+            <Button x:Name="AddButton"    Content="Добавить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnAdd"/>
+            <Button x:Name="EditButton"   Content="Изменить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnEdit"/>
+            <Button x:Name="DeleteButton" Content="Удалить"  Style="{StaticResource DangerButton}"  Width="120" Click="OnDelete"/>
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Top" Margin="0,0,0,8" Foreground="{StaticResource NeutralBrush}" Text="Готово к работе."/>
+        <DataGrid x:Name="Grid" MouseDoubleClick="OnDetails"/>
+    </DockPanel>
+</Window>

@@ -1,0 +1,17 @@
+<Window x:Class="BaltikaApp.Wpf.ShipmentsByPeriodWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Рейсы по периоду" Icon="pack://application:,,,/Assets/AppIcon.ico" Height="560" Width="1000"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="10">
+        <StackPanel x:Name="ActionBar" DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <TextBlock Text="Начало:" VerticalAlignment="Center"/>
+            <DatePicker x:Name="StartDate" Width="140" Margin="8,0,16,0"/>
+            <TextBlock Text="Конец:" VerticalAlignment="Center"/>
+            <DatePicker x:Name="EndDate" Width="140" Margin="8,0,16,0"/>
+            <Button Content="Найти" Style="{StaticResource PrimaryButton}" Width="120" Click="OnFind"/>
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Top" Margin="0,0,0,8" Foreground="{StaticResource NeutralBrush}" Text="Выберите период и нажмите «Найти»."/>
+        <DataGrid x:Name="Grid"/>
+    </DockPanel>
+</Window>

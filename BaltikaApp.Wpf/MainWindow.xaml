@@ -1,0 +1,86 @@
+<Window x:Class="BaltikaApp.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="BaltikaApp"
+        Icon="pack://application:,,,/Assets/AppIcon.ico"
+        Height="760" Width="1120"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="1.25*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Операционные данные" Margin="4" Grid.Column="0" Grid.Row="0">
+            <StackPanel Margin="8">
+                <Button Content="Суда"    Style="{StaticResource PrimaryButton}" Margin="0,0,0,6" Command="{Binding ShowShipsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="Рейсы"   Style="{StaticResource PrimaryButton}" Margin="0,0,0,6" Command="{Binding ShowShipmentsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="Грузы"   Style="{StaticResource PrimaryButton}" Margin="0,0,0,6" Command="{Binding ShowCargoCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="Клиенты" Style="{StaticResource PrimaryButton}"                  Command="{Binding ShowClientsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Отчёты и анализ" Margin="4" Grid.Column="0" Grid.Row="1">
+            <StackPanel Margin="8">
+                <Button Content="Отчёты"             Style="{StaticResource AccentButton}" Margin="0,0,0,6" Command="{Binding ShowReportsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="Рейсы по периоду"   Style="{StaticResource AccentButton}"                  Command="{Binding ShowByPeriodCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Режим доступа и состояние" Margin="4" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
+            <StackPanel Margin="10">
+                <TextBlock Text="Режим:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding AccessMode}" Margin="0,2,0,8"/>
+                <TextBlock Text="Роль:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding AccessRole}" Margin="0,2,0,8"/>
+                <TextBlock Text="Подключение:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding ConnectionSummary}" Margin="0,2,0,8" TextWrapping="Wrap"/>
+                <TextBlock Text="Статус БД:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding DbStatus}" Margin="0,2,0,10" TextWrapping="Wrap"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <Button Content="Включить редактирование" Style="{StaticResource PrimaryButton}" Width="200"
+                            Command="{Binding EnableWriterCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    <Button Content="⚙" Style="{StaticResource IconButton}" Margin="8,0,0,0"
+                            Command="{Binding ConnectionSettingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            ToolTip="Настройки подключения"/>
+                </StackPanel>
+                <Button Content="Вернуться в режим чтения" Style="{StaticResource NeutralButton}"
+                        Command="{Binding DisableWriterCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="Справочники" Style="{StaticResource AccentButton}" Margin="0,8,0,0"
+                        Command="{Binding ShowReferencesCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Показатели (последний месяц)" Margin="4" Grid.Column="0" Grid.Row="2">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="Рейсов" FontSize="14"/>
+                    <TextBlock x:Name="ShipmentsStatText" Text="0" FontSize="28" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,8,0,0">
+                    <TextBlock Text="Грузов" FontSize="14"/>
+                    <TextBlock x:Name="CargoStatText" Text="0" FontSize="28" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Margin="12,0,0,0" VerticalAlignment="Center">
+                    <Button Content="Обновить показатели" Style="{StaticResource AccentButton}" MinWidth="170"
+                            Command="{Binding RefreshKpiCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    <TextBlock x:Name="KpiUpdatedText" Margin="0,8,0,0" FontSize="11" Foreground="{StaticResource NeutralBrush}"
+                               Text="Последнее обновление: —"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>

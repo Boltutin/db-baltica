@@ -1,0 +1,18 @@
+<Window x:Class="BaltikaApp.Wpf.ReportsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Отчёты" Icon="pack://application:,,,/Assets/AppIcon.ico" Height="650" Width="1200"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="10">
+        <StackPanel x:Name="ActionBar" DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <TextBlock Text="Отчёт:" VerticalAlignment="Center"/>
+            <ComboBox x:Name="ReportsCombo" Width="360" Margin="8,0,12,0" SelectionChanged="OnReportChanged"/>
+            <Button Content="Обновить"     Style="{StaticResource AccentButton}"  Width="120" Margin="0,0,8,0" Click="OnRefresh"/>
+            <Button Content="Экспорт CSV"  Style="{StaticResource NeutralButton}" Width="120" Margin="0,0,8,0" Click="OnExportCsv"/>
+            <Button Content="Экспорт XLSX" Style="{StaticResource NeutralButton}" Width="120" Margin="0,0,8,0" Click="OnExportXlsx"/>
+            <Button Content="Печать"       Style="{StaticResource PrimaryButton}" Width="120" Click="OnPrint"/>
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Top" Margin="0,0,0,8" Foreground="{StaticResource NeutralBrush}" Text="Выберите отчёт для загрузки."/>
+        <DataGrid x:Name="Grid"/>
+    </DockPanel>
+</Window>

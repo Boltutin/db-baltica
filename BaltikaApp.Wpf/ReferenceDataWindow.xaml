@@ -1,0 +1,50 @@
+<Window x:Class="BaltikaApp.Wpf.ReferenceDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Справочники"
+        Icon="pack://application:,,,/Assets/AppIcon.ico"
+        Height="640" Width="1080"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="10">
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Bottom" Margin="0,8,0,0" Foreground="{StaticResource NeutralBrush}"
+                   Text="Выберите вкладку и выполните нужное действие."/>
+
+        <TabControl>
+            <TabItem Header="Капитаны">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Обновить" Style="{StaticResource AccentButton}" Width="120" Margin="0,0,8,0" Click="OnRefreshCaptains"/>
+                        <Button x:Name="AddCaptainButton" Content="Добавить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnAddCaptain"/>
+                        <Button x:Name="EditCaptainButton" Content="Изменить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnEditCaptain"/>
+                        <Button x:Name="DeleteCaptainButton" Content="Удалить" Style="{StaticResource DangerButton}" Width="120" Click="OnDeleteCaptain"/>
+                    </StackPanel>
+                    <DataGrid x:Name="CaptainsGrid" MouseDoubleClick="OnEditCaptain"/>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Порты">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Обновить" Style="{StaticResource AccentButton}" Width="120" Margin="0,0,8,0" Click="OnRefreshPorts"/>
+                        <Button x:Name="AddPortButton" Content="Добавить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnAddPort"/>
+                        <Button x:Name="EditPortButton" Content="Изменить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnEditPort"/>
+                        <Button x:Name="DeletePortButton" Content="Удалить" Style="{StaticResource DangerButton}" Width="120" Click="OnDeletePort"/>
+                    </StackPanel>
+                    <DataGrid x:Name="PortsGrid" MouseDoubleClick="OnEditPort"/>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Адреса">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Обновить" Style="{StaticResource AccentButton}" Width="120" Margin="0,0,8,0" Click="OnRefreshAddresses"/>
+                        <Button x:Name="AddAddressButton" Content="Добавить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnAddAddress"/>
+                        <Button x:Name="EditAddressButton" Content="Изменить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnEditAddress"/>
+                        <Button x:Name="DeleteAddressButton" Content="Удалить" Style="{StaticResource DangerButton}" Width="120" Click="OnDeleteAddress"/>
+                    </StackPanel>
+                    <DataGrid x:Name="AddressesGrid" MouseDoubleClick="OnEditAddress"/>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

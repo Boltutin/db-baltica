@@ -1,0 +1,78 @@
+<Window x:Class="BaltikaApp.Wpf.Dialogs.ShipEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Судно"
+        Icon="pack://application:,,,/Assets/AppIcon.ico"
+        Width="680" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Рег. номер" VerticalAlignment="Center"/>
+        <TextBox x:Name="RegBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Название" VerticalAlignment="Center"/>
+        <TextBox x:Name="NameBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="Тип судна" VerticalAlignment="Center"/>
+        <ComboBox x:Name="TypeBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,8"
+                  DisplayMemberPath="type_name" SelectedValuePath="type_id"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="Капитан" VerticalAlignment="Center"/>
+        <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="CaptainBox" Grid.Column="0" Margin="0,0,8,0"
+                      DisplayMemberPath="full_name" SelectedValuePath="captain_id"/>
+            <Button Grid.Column="1" Content="+" Style="{StaticResource IconButton}" Click="OnAddCaptain" ToolTip="Добавить капитана"/>
+        </Grid>
+
+        <Label Grid.Row="4" Grid.Column="0" Content="Верфь" VerticalAlignment="Center"/>
+        <ComboBox x:Name="DockyardBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,8"
+                  DisplayMemberPath="name" SelectedValuePath="dockyard_id"/>
+
+        <Label Grid.Row="5" Grid.Column="0" Content="Порт приписки" VerticalAlignment="Center"/>
+        <Grid Grid.Row="5" Grid.Column="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="PortBox" Grid.Column="0" Margin="0,0,8,0"
+                      DisplayMemberPath="port_name" SelectedValuePath="port_id"/>
+            <Button Grid.Column="1" Content="+" Style="{StaticResource IconButton}" Click="OnAddPort" ToolTip="Добавить порт"/>
+        </Grid>
+
+        <Label Grid.Row="6" Grid.Column="0" Content="Грузоподъёмность (т)" VerticalAlignment="Center"/>
+        <TextBox x:Name="CapacityBox" Grid.Row="6" Grid.Column="1" Margin="0,0,0,8" Text="0"/>
+
+        <Label Grid.Row="7" Grid.Column="0" Content="Год постройки" VerticalAlignment="Center"/>
+        <TextBox x:Name="YearBox" Grid.Row="7" Grid.Column="1" Margin="0,0,0,8" Text="1980"/>
+
+        <Label Grid.Row="8" Grid.Column="0" Content="Таможенная стоимость" VerticalAlignment="Center"/>
+        <TextBox x:Name="CustomsBox" Grid.Row="8" Grid.Column="1" Margin="0,0,0,8" Text="0"/>
+
+        <StackPanel Grid.Row="10" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Сохранить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnSave"/>
+            <Button Content="Отмена"    Style="{StaticResource NeutralButton}"  Width="120" Click="OnCancel"/>
+        </StackPanel>
+    </Grid>
+</Window>

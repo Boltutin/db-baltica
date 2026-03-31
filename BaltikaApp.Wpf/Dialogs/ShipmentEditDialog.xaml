@@ -1,0 +1,73 @@
+<Window x:Class="BaltikaApp.Wpf.Dialogs.ShipmentEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Рейс"
+        Icon="pack://application:,,,/Assets/AppIcon.ico"
+        Width="720" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Судно" VerticalAlignment="Center"/>
+        <ComboBox x:Name="ShipBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"
+                  DisplayMemberPath="reg_number" SelectedValuePath="ship_id"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Порт отправления" VerticalAlignment="Center"/>
+        <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="OriginBox" Grid.Column="0" Margin="0,0,8,0"
+                      DisplayMemberPath="port_name" SelectedValuePath="port_id"/>
+            <Button Grid.Column="1" Content="+" Style="{StaticResource IconButton}" Click="OnAddPort" ToolTip="Добавить порт"/>
+        </Grid>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="Порт назначения" VerticalAlignment="Center"/>
+        <Grid Grid.Row="2" Grid.Column="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="DestBox" Grid.Column="0" Margin="0,0,8,0"
+                      DisplayMemberPath="port_name" SelectedValuePath="port_id"/>
+            <Button Grid.Column="1" Content="+" Style="{StaticResource IconButton}" Click="OnAddPort" ToolTip="Добавить порт"/>
+        </Grid>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="Дата отправления" VerticalAlignment="Center"/>
+        <DatePicker x:Name="DeparturePicker" Grid.Row="3" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,8">
+            <CheckBox x:Name="ArriveCheck" Content="Дата прибытия:" VerticalAlignment="Center" Width="190" Checked="OnArriveChecked" Unchecked="OnArriveChecked"/>
+            <DatePicker x:Name="ArrivePicker" IsEnabled="False" Width="200"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,8">
+            <CheckBox x:Name="CustomsCheck" Content="Таможенная стоимость:" VerticalAlignment="Center" Width="190" Checked="OnCustomsChecked" Unchecked="OnCustomsChecked"/>
+            <TextBox x:Name="CustomsBox" IsEnabled="False" Width="200" Text="0"/>
+        </StackPanel>
+
+        <CheckBox x:Name="ClearanceCheck" Grid.Row="6" Grid.ColumnSpan="2"
+                  Content="Таможенное оформление" Margin="0,0,0,8"/>
+
+        <StackPanel Grid.Row="8" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Сохранить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnSave"/>
+            <Button Content="Отмена"    Style="{StaticResource NeutralButton}"  Width="120" Click="OnCancel"/>
+        </StackPanel>
+    </Grid>
+</Window>

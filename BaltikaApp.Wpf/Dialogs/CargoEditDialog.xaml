@@ -1,0 +1,68 @@
+<Window x:Class="BaltikaApp.Wpf.Dialogs.CargoEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Груз"
+        Icon="pack://application:,,,/Assets/AppIcon.ico"
+        Width="800" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Отправитель" VerticalAlignment="Center"/>
+        <ComboBox x:Name="SenderBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"
+                  DisplayMemberPath="sender_name" SelectedValuePath="sender_id"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Получатель" VerticalAlignment="Center"/>
+        <ComboBox x:Name="ConsigneeBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"
+                  DisplayMemberPath="consignee_name" SelectedValuePath="consignee_id"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="Номер груза в партии" VerticalAlignment="Center"/>
+        <TextBox x:Name="CargoNumberBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,8" Text="0"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="Наименование груза" VerticalAlignment="Center"/>
+        <TextBox x:Name="CargoNameBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0,8"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Content="Единица измерения" VerticalAlignment="Center"/>
+        <ComboBox x:Name="UnitBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,8"
+                  DisplayMemberPath="unit_name" SelectedValuePath="unit_id"/>
+
+        <Label Grid.Row="5" Grid.Column="0" Content="Заявленная стоимость" VerticalAlignment="Center"/>
+        <TextBox x:Name="DeclaredBox" Grid.Row="5" Grid.Column="1" Margin="0,0,0,8" Text="0"/>
+
+        <Label Grid.Row="6" Grid.Column="0" Content="Страховая стоимость" VerticalAlignment="Center"/>
+        <TextBox x:Name="InsuredBox" Grid.Row="6" Grid.Column="1" Margin="0,0,0,8" Text="0"/>
+
+        <Label Grid.Row="7" Grid.Column="0" Content="Таможенная стоимость" VerticalAlignment="Center"/>
+        <TextBox x:Name="CustomBox" Grid.Row="7" Grid.Column="1" Margin="0,0,0,8" Text="0"/>
+
+        <Label Grid.Row="8" Grid.Column="0" Content="Количество" VerticalAlignment="Center"/>
+        <TextBox x:Name="QuantityBox" Grid.Row="8" Grid.Column="1" Margin="0,0,0,8" Text="0"/>
+
+        <Label Grid.Row="9" Grid.Column="0" Content="Примечания" VerticalAlignment="Top" Margin="0,4,0,0"/>
+        <TextBox x:Name="CommentBox" Grid.Row="9" Grid.Column="1" Margin="0,0,0,8"
+                 AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+
+        <StackPanel Grid.Row="11" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Сохранить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnSave"/>
+            <Button Content="Отмена"    Style="{StaticResource NeutralButton}"  Width="120" Click="OnCancel"/>
+        </StackPanel>
+    </Grid>
+</Window>

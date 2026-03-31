@@ -1,0 +1,26 @@
+<Window x:Class="BaltikaApp.Wpf.ClientsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Клиенты" Icon="pack://application:,,,/Assets/AppIcon.ico" Height="620" Width="1200"
+        WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="10">
+        <StackPanel x:Name="ActionBar" DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="Обновить" Style="{StaticResource AccentButton}"  Width="120" Margin="0,0,8,0" Click="OnRefresh"/>
+            <Button x:Name="AddButton"    Content="Добавить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnAdd"/>
+            <Button x:Name="EditButton"   Content="Изменить" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0" Click="OnEdit"/>
+            <Button x:Name="DeleteButton" Content="Удалить"  Style="{StaticResource DangerButton}"  Width="120" Click="OnDelete"/>
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Top" Margin="0,0,0,8" Foreground="{StaticResource NeutralBrush}" Text="Готово к работе."/>
+        <TabControl x:Name="Tabs" SelectionChanged="OnTabChanged">
+            <TabItem Header="Отправители">
+                <DataGrid x:Name="SendersGrid" MouseDoubleClick="OnSenderDetails"/>
+            </TabItem>
+            <TabItem Header="Получатели">
+                <DataGrid x:Name="ConsigneesGrid" MouseDoubleClick="OnConsigneeDetails"/>
+            </TabItem>
+            <TabItem Header="Активность клиентов">
+                <DataGrid x:Name="ActivityGrid" MouseDoubleClick="OnActivityDetails"/>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
