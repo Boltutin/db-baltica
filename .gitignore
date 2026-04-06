@@ -27,3 +27,26 @@ import-baltika.bat
 import-baltika.ps1
 export-baltika.bat
 export-baltika.ps1
+
+# Курсовая / презентация / скриншоты / вспомогательные скрипты (только локально)
+BaltikaApp_Presentation.pptx
+Kursovaya_Baltika_full.txt
+Kursovaya_Baltika_v2.docx
+Kursovaya_Baltika_v3.docx
+alt-ppt-txt.txt
+build_presentation.py
+gen_docx.py
+insert_screenshots.py
+qa.txt
+qa0.txt
+qa1.txt
+shot_dpi.py
+shot_final.py
+shot_missing.py
+shot_period.py
+shot_period_data.py
+shot_pwd.py
+shot_uia.py
+take_all_screenshots.py
+take_screenshots.py
+screenshots/
