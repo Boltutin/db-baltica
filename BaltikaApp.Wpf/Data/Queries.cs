@@ -1,7 +1,7 @@
 namespace BaltikaApp.Data
 {
     /// <summary>
-    /// SQL-запросы для KPI-блока главного окна: количество рейсов и грузов за период.
+    /// SQL для KPI на главном окне. Границы периода задаются параметрами <c>@start</c> и <c>@end</c> (см. <c>MainWindow.RefreshKpi</c>).
     /// </summary>
     internal static class KpiQueries
     {
@@ -72,7 +72,7 @@ UPDATE ships
     }
 
     /// <summary>
-    /// Запросы к рейсам и фильтрам списка судов.
+    /// Рейсы: выборка из представления <c>shipments_full_info</c> с фильтром по датам и опционально по судну; CRUD по таблице <c>shipments</c>.
     /// </summary>
     internal static class ShipmentQueries
     {
@@ -253,6 +253,7 @@ WHERE cargo_id=@cargo_id;";
         public const string PortsStatistics = "SELECT * FROM ports_statistics;";
         public const string ShipsActivity = "SELECT * FROM ships_activity;";
         public const string CargoFinancialSummary = "SELECT * FROM cargo_financial_summary;";
+        /// <summary>Представление <c>clients_activity</c> (дублирует по смыслу запрос <c>ClientsQueries.ClientsActivity</c> для окна клиентов).</summary>
         public const string ClientsActivityView = "SELECT * FROM clients_activity;";
         public const string ShipmentsByMonth = "SELECT * FROM shipments_by_month;";
         public const string RefCaptains = "SELECT captain_id AS \"ID\", full_name AS \"ФИО\", experience AS \"Стаж (лет)\", created_at AS \"Создан\", updated_at AS \"Изменён\" FROM captains ORDER BY full_name;";

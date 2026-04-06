@@ -12,6 +12,7 @@ internal enum AppThemeMode
     Dark
 }
 
+/// <summary>Светлая/тёмная тема: подмена кистей в ресурсах приложения и сохранение выбора в <c>%LocalAppData%\BaltikaApp\ui-theme.json</c>.</summary>
 internal static class ThemeManager
 {
     private const string ThemeConfigFileName = "ui-theme.json";

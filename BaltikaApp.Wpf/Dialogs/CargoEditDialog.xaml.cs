@@ -10,7 +10,10 @@ public partial class CargoEditDialog : Window
 {
     private readonly int? _cargoId;
     private int _shipmentId;
-    /// <summary>Результат ввода пользователя. Доступен после <c>ShowDialog() == true</c>.</summary>
+
+    /// <summary>
+    /// Заполняется при загрузке в режиме редактирования; при добавлении — при нажатии «Сохранить» после успешной валидации.
+    /// </summary>
     public CargoEditValues Values { get; private set; }
 
     /// <param name="id">ID рейса (режим добавления) или ID груза (режим редактирования).</param>

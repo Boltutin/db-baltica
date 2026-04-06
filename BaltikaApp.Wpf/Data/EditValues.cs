@@ -1,6 +1,6 @@
 namespace BaltikaApp.Data
 {
-    /// <summary>Данные судна, собранные в диалоге редактирования.</summary>
+    /// <summary>Данные судна из диалога редактирования (таблица <c>ships</c>).</summary>
     public struct ShipEditValues
     {
         public string RegNumber;
@@ -14,7 +14,7 @@ namespace BaltikaApp.Data
         public int HomePortId;
     }
 
-    /// <summary>Данные рейса, собранные в диалоге редактирования.</summary>
+    /// <summary>Данные рейса из диалога редактирования (таблица <c>shipments</c>).</summary>
     public struct ShipmentEditValues
     {
         public int ShipId;
@@ -26,7 +26,7 @@ namespace BaltikaApp.Data
         public bool CustomClearance;
     }
 
-    /// <summary>Данные груза, собранные в диалоге редактирования.</summary>
+    /// <summary>Данные груза из диалога редактирования (таблица <c>cargo</c>).</summary>
     public struct CargoEditValues
     {
         public int CargoId;
@@ -43,7 +43,7 @@ namespace BaltikaApp.Data
         public string Comment;
     }
 
-    /// <summary>Данные отправителя, собранные в диалоге редактирования.</summary>
+    /// <summary>Данные отправителя из диалога редактирования (таблица <c>senders</c>).</summary>
     public struct SenderEditValues
     {
         public string SenderName;
@@ -52,7 +52,7 @@ namespace BaltikaApp.Data
         public int AddressId;
     }
 
-    /// <summary>Данные получателя, собранные в диалоге редактирования.</summary>
+    /// <summary>Данные получателя из диалога редактирования (таблица <c>consignees</c>).</summary>
     public struct ConsigneeEditValues
     {
         public string ConsigneeName;

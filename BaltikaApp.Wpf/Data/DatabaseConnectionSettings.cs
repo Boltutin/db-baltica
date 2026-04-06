@@ -4,9 +4,10 @@ using Npgsql;
 namespace BaltikaApp.Data
 {
     /// <summary>
-    /// Параметры подключения к PostgreSQL: переменные окружения, локальный файл конфигурации
-    /// (%LocalAppData%\BaltikaApp\connection.json), значения по умолчанию.
-    /// Переменные: BALTIKA_HOST, BALTIKA_PORT, BALTIKA_DB, BALTIKA_ADMIN_USER, BALTIKA_ADMIN_PASSWORD.
+    /// Параметры подключения к PostgreSQL: переменные окружения, локальный файл
+    /// (<c>%LocalAppData%\BaltikaApp\connection.json</c>), значения по умолчанию.
+    /// Переменные окружения: <c>BALTIKA_HOST</c>, <c>BALTIKA_PORT</c>, <c>BALTIKA_DB</c>
+    /// (учётная запись суперпользователя для развёртывания БД задаётся только в скриптах <c>sql/deploy</c>).
     /// </summary>
     internal static class DatabaseConnectionSettings
     {
@@ -17,10 +18,6 @@ namespace BaltikaApp.Data
         public static string Host => _host;
         public static int Port => _port;
         public static string Database => _database;
-
-        public static string AdminUsername { get; } = Environment.GetEnvironmentVariable("BALTIKA_ADMIN_USER") ?? "postgres";
-
-        public static string AdminPassword { get; } = Environment.GetEnvironmentVariable("BALTIKA_ADMIN_PASSWORD") ?? "postgres";
 
         /// <summary>
         /// Инициализирует параметры из окружения и сохранённого файла. Вызывается один раз при запуске, до обращения к данным.
@@ -78,8 +75,5 @@ namespace BaltikaApp.Data
 
         /// <summary>Строка подключения для роли редактирования (<c>baltika_writer</c>).</summary>
         public static string WriterConnectionString => BuildConnectionString("baltika_writer", "12345");
-
-        /// <summary>Строка подключения для административной роли (создание объектов БД, управление).</summary>
-        public static string AdminConnectionString => BuildConnectionString(AdminUsername, AdminPassword);
     }
 }

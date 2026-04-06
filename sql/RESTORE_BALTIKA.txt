@@ -1,0 +1,50 @@
+Дамп базы BaltikaApp (PostgreSQL)
+================================
+
+Файл: baltika_backup.dump
+Формат: custom (-Fc), сжатие gzip. Снят с локальной БД baltika (UTF-8).
+
+Требования: PostgreSQL 12+ (дамп создан средствами PostgreSQL 17; восстановление
+на 14–17 обычно без проблем). Нужны утилиты pg_restore и при необходимости psql.
+
+Восстановление «с нуля» (базы baltika ещё нет)
+-----------------------------------------------
+
+Задайте пароль суперпользователя и выполните (путь к pg_restore подставьте свой,
+если не в PATH):
+
+  set PGPASSWORD=ваш_пароль
+  pg_restore -h localhost -p 5432 -U postgres --no-owner --no-acl -v -C -d postgres baltika_backup.dump
+
+Ключ -C создаёт базу baltika и восстанавливает в неё объекты. Подключение -d postgres
+нужно только для выполнения CREATE DATABASE.
+
+Если база baltika уже существует
+--------------------------------
+
+Сначала удалите её (осторожно: все данные в baltika будут потеряны), затем команду
+выше. В psql от postgres:
+
+  DROP DATABASE IF EXISTS baltika WITH (FORCE);
+
+Либо из каталога sql:
+
+  powershell -ExecutionPolicy Bypass -File .\restore_baltika.ps1 -DropExisting
+
+Интерактивный скрипт (Windows)
+------------------------------
+
+  cd путь\к\BaltikaApp\sql
+  powershell -ExecutionPolicy Bypass -File .\restore_baltika.ps1
+
+Параметры: -PgHost, -Port, -User, -Password, -DumpPath, -DropExisting
+См. комментарии в restore_baltika.ps1.
+
+После восстановления
+--------------------
+
+Подключение приложения — как в sql/deploy/README.md:
+  baltika_reader / 123
+  baltika_writer / 12345
+
+Альтернатива без дампа: развернуть БД скриптами sql/deploy/deploy.ps1.

@@ -5,9 +5,9 @@ using BaltikaApp.Data;
 namespace BaltikaApp.Wpf;
 
 /// <summary>
-/// Централизованная модель состояния WPF-интерфейса: режим доступа, строка подключения, статус БД.
-/// Реализует <see cref="INotifyPropertyChanged"/> для привязки данных XAML.
-/// Подписывается на <see cref="ConnectionManager.ModeChanged"/> и отписывается при уничтожении (IDisposable).
+/// Состояние главного окна: режим доступа к БД, краткое описание сервера (<see cref="ConnectionSummary"/>), текст статуса.
+/// Реализует <see cref="INotifyPropertyChanged"/> для привязки XAML.
+/// Подписывается на <see cref="ConnectionManager.ModeChanged"/> и отписывается в <see cref="Dispose"/>.
 /// </summary>
 public sealed class AppState : INotifyPropertyChanged, IDisposable
 {
