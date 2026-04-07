@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+# -*- coding: utf-8 -*-
+"""Генерирует ER_conceptual_baltika.svg (UTF-8). Запуск: python render_ER_conceptual_svg.py"""
+from pathlib import Path
+
+SVG = r"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 680" width="1040" height="680" font-family="Segoe UI, Arial, Helvetica, sans-serif">
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
@@ -113,3 +117,14 @@
   <line x1="36" y1="578" x2="76" y2="578" stroke="#553c9a" stroke-width="1.2" marker-end="url(#arr)"/>
   <text x="82" y="582" font-size="8.5" fill="#4a5568">порт — адрес</text>
 </svg>
+"""
+
+def main():
+    out = Path(__file__).with_name("ER_conceptual_baltika.svg")
+    out.write_text(SVG, encoding="utf-8", newline="\n")
+    t = out.read_text(encoding="utf-8")
+    assert "Рейс" in t and "Получатель" in t
+    print("OK", out, out.stat().st_size)
+
+if __name__ == "__main__":
+    main()
