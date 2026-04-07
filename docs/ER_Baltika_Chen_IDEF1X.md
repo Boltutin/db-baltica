@@ -172,11 +172,22 @@ erDiagram
 python docs/render_IDEF1X_baltika_svg.py
 ```
 
+### 2.5. Импорт в Draw.io (diagrams.net)
+
+Файл **[`Baltika_IDEF1X.drawio`](Baltika_IDEF1X.drawio)** — тот же состав таблиц и FK, что в `02_schema.sql`, в виде черновика для правки вручную:
+
+1. Откройте [app.diagrams.net](https://app.diagrams.net) → **File → Open from → Device…** (или перетащите `.drawio` в окно браузера).
+2. При необходимости пересоберите файл после правок скрипта: `python docs/render_baltika_drawio.py`.
+3. В редакторе можно развести пересекающиеся связи (**Waypoints** у рёбер), включить **View → Grid**, выровнять блоки (**Arrange → Align**), затем **File → Export as → PNG/PDF/SVG** для вставки в Word.
+
+Связи на диаграмме заданы упрощённо (одна линия **порт → рейс** с подписью про `origin`/`destination`); при сдаче при желании разделите на две связи к одной таблице `ports`.
+
 ---
 
 ## 3. Экспорт в картинку
 
 - **Готовые SVG:** [`ER_conceptual_baltika.svg`](ER_conceptual_baltika.svg) (концептуальная ER), [`IDEF1X_baltika.svg`](IDEF1X_baltika.svg) (IDEF1X) — вставка в Word или открытие в браузере.
+- **Draw.io:** [`Baltika_IDEF1X.drawio`](Baltika_IDEF1X.drawio) — открыть в diagrams.net, отредактировать раскладку, экспортировать PNG/PDF/SVG.
 - **Из VS Code:** расширение «Markdown Preview Mermaid Support» → экспорт PDF/печать для блоков Mermaid выше.
 - **Онлайн:** [mermaid.live](https://mermaid.live) — вставьте блок из раздела 1.2 или 1.3 → PNG/SVG.
 - **Pandoc / Quarto:** рендер Markdown с Mermaid в PDF для пояснительной записки.
