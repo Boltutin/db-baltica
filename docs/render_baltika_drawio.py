@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Генерирует docs/Baltika_IDEF1X.drawio — черновик логической схемы для diagrams.net (Draw.io).
-Источник полей: sql/deploy/02_schema.sql. Открытие: app.diagrams.net → File → Open → выбрать файл.
+Генерирует docs/Baltika_conceptual_ER.drawio — концептуальная ER-модель (этап конструирования БД):
+нотация Чена: сущности (прямоугольники), связи (ромбы), кардинальности на рёбрах.
 
-После открытия можно: выделить всё → Arrange → Layout → … или вручную развести связи.
+Предметная область согласована с sql/deploy/02_schema.sql; без имён таблиц, типов SQL и служебных полей.
+
+Открытие: app.diagrams.net → File → Open. Пересборка: python docs/render_baltika_drawio.py
 """
 from __future__ import annotations
 
@@ -16,238 +18,206 @@ def esc_attr(s: str) -> str:
     return xml_escape(s, {'"': '&quot;', "'": '&apos;'})
 
 
-def entity_label(
-    title_ru: str,
-    table: str,
-    pk: list[str],
-    fk: list[str],
-    data: list[str],
-) -> str:
-    lines = [
-        f"<b>{html.escape(title_ru)}</b>",
-        f'<font color="#64748b">{html.escape(table)}</font>',
-        "<hr size='1'/>",
-        '<font color="#0f4c81"><b>Ключ</b></font>',
-    ]
-    for p in pk:
-        lines.append(f"PK {html.escape(p)}")
-    lines.append('<font color="#334155"><b>Атрибуты / FK</b></font>')
-    for f in fk:
-        lines.append(f'<font color="#7c3aed">FK {html.escape(f)}</font>')
-    for d in data:
-        lines.append(html.escape(d))
-    return "<div style='text-align:left;font-size:10px;line-height:1.25;'>" + "<br/>".join(lines) + "</div>"
+def entity_value(title: str, attrs: list[str]) -> str:
+    lines = [f"<b>{html.escape(title)}</b>"]
+    for a in attrs:
+        lines.append(f'<font size="1" color="#4a5568">{html.escape(a)}</font>')
+    return "<div style='text-align:center;line-height:1.2;'>" + "<br/>".join(lines) + "</div>"
 
 
-def cell_style(*, dependent: bool) -> str:
-    base = (
-        "whiteSpace=wrap;html=1;align=left;verticalAlign=top;"
-        "fillColor=#ffffff;strokeColor=#1a365d;strokeWidth=2;"
-        "spacingLeft=6;spacingTop=4;spacingRight=4;spacingBottom=4;"
-        "fontFamily=Segoe UI;fontSize=10;"
-    )
-    if dependent:
-        return base + "rounded=1;arcSize=12;"
-    return base + "rounded=0;"
+STYLE_ENTITY = (
+    "rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;"
+    "fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontFamily=Segoe UI;fontSize=11;"
+)
+STYLE_REL = (
+    "shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;align=center;"
+    "verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;"
+    "fontFamily=Segoe UI;fontSize=10;"
+)
+STYLE_LEGEND = (
+    "rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f8fafc;"
+    "strokeColor=#cbd5e0;fontSize=10;spacing=8;"
+)
+
+STYLE_EDGE = (
+    "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;"
+    "strokeWidth=1.5;strokeColor=#334155;endArrow=none;startArrow=none;"
+)
+STYLE_EDGE_MAIN = (
+    "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;"
+    "strokeWidth=2.5;strokeColor=#0f4c81;endArrow=none;startArrow=none;"
+)
 
 
-def edge_style(*, solid: bool) -> str:
-    if solid:
-        return (
-            "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;"
-            "jettySize=auto;html=1;strokeWidth=2;strokeColor=#0f4c81;"
-            "endArrow=block;endFill=1;"
-        )
+def cell_vertex(cid: str, x: float, y: float, w: float, h: float, value: str, style: str) -> str:
     return (
-        "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;"
-        "jettySize=auto;html=1;strokeWidth=1;dashed=1;dashPattern=5 4;"
-        "strokeColor=#64748b;endArrow=block;endFill=0;"
+        f'        <mxCell id="{cid}" value="{esc_attr(value)}" style="{esc_attr(style)}" '
+        f'vertex="1" parent="1">\n'
+        f'          <mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" as="geometry"/>\n'
+        f"        </mxCell>"
+    )
+
+
+def cell_edge(eid: str, src: str, tgt: str, label: str, style: str) -> str:
+    lab = esc_attr(label) if label else ""
+    return (
+        f'        <mxCell id="{eid}" value="{lab}" style="{esc_attr(style)}" edge="1" parent="1" '
+        f'source="{src}" target="{tgt}">\n'
+        f'          <mxGeometry relative="1" as="geometry"/>\n'
+        f"        </mxCell>"
     )
 
 
 def main() -> None:
-    # id -> (x, y, w, h, dependent, label_html)
-    entities: dict[str, tuple[float, float, float, float, bool, str]] = {}
-
-    def add(
-        eid: str,
-        x: float,
-        y: float,
-        w: float,
-        h: float,
-        dependent: bool,
-        title: str,
-        table: str,
-        pk: list[str],
-        fk: list[str],
-        data: list[str],
-    ) -> None:
-        entities[eid] = (x, y, w, h, dependent, entity_label(title, table, pk, fk, data))
-
-    # --- справочники (верх) ---
-    y0 = 40
-    w0 = 168
-    gap = 18
-    xs = [40 + i * (w0 + gap) for i in range(6)]
-    h_ref = 200
-    add("addresses", xs[0], y0, w0, h_ref, False, "Адрес", "addresses", ["address_id"], [], ["country", "region", "city", "street", "building_number"])
-    add("banks", xs[1], y0, w0, h_ref, False, "Банк", "banks", ["bank_id"], [], ["bank_name"])
-    add("ship_types", xs[2], y0, w0, h_ref, False, "Тип судна", "ship_types", ["type_id"], [], ["type_name"])
-    add("dockyards", xs[3], y0, w0, h_ref, False, "Верфь", "dockyards", ["dockyard_id"], [], ["name", "country"])
-    add("units", xs[4], y0, w0, h_ref, False, "Ед. изм.", "units", ["unit_id"], [], ["unit_name", "unit_code"])
-    add("captains", xs[5], y0, w0, h_ref, False, "Капитан", "captains", ["captain_id"], [], ["full_name", "experience", "created_at, updated_at"])
-
-    y1 = y0 + h_ref + 40
-    w_port = w0 * 2 + gap
-    add("ports", xs[2], y1, w_port, 160, True, "Порт", "ports", ["port_id"], ["address_id"], ["port_name", "created_at, updated_at"])
-
-    y2 = y1 + 160 + 36
-    h_mid = 200
-    add("senders", xs[1], y2, w0, h_mid, True, "Отправитель", "senders", ["sender_id"], ["bank_id", "address_id"], ["sender_name", "inn_sender", "created_at, updated_at"])
-    add("consignees", xs[3], y2, w0, h_mid, True, "Получатель", "consignees", ["consignee_id"], ["bank_id", "address_id"], ["consignee_name", "inn_consignee", "created_at, updated_at"])
-
-    y3 = y2 + h_mid + 40
-    w_ship = 440
-    x_ship = 40 + (w0 + gap) * 2
-    add(
-        "ships",
-        x_ship,
-        y3,
-        w_ship,
-        240,
-        True,
-        "Судно",
-        "ships",
-        ["ship_id"],
-        ["captain_id", "type_id", "dockyard_id", "home_port_id"],
-        ["reg_number", "name", "capacity", "year_built", "customs_value", "picture", "created_at, updated_at"],
-    )
-
-    y4 = y3 + 240 + 36
-    add(
-        "shipments",
-        x_ship,
-        y4,
-        w_ship,
-        220,
-        True,
-        "Рейс",
-        "shipments",
-        ["shipment_id"],
-        ["ship_id", "origin_port_id", "destination_port_id"],
-        ["departure_date", "arrive_date", "customs_value", "custom_clearance", "created_at, updated_at"],
-    )
-
-    y5 = y4 + 220 + 36
-    add(
-        "cargo",
-        x_ship,
-        y5,
-        w_ship,
-        260,
-        True,
-        "Груз",
-        "cargo",
-        ["cargo_id"],
-        ["shipment_id", "sender_id", "consignee_id", "unit_id"],
-        [
-            "cargo_number",
-            "cargo_name",
-            "declared_value",
-            "insured_value",
-            "custom_value",
-            "quantity",
-            "comment",
-            "created_at, updated_at",
-        ],
-    )
-
-    legend_y = y5 + 260 + 30
-    legend_h = 100
-    legend_w = 900
-    legend_x = 40
-
-    cells_xml: list[str] = []
+    cells: list[str] = []
+    edges: list[str] = []
     nid = 2
-    id_map: dict[str, str] = {}
 
-    for eid, (x, y, w, h, dep, label) in entities.items():
-        cid = str(nid)
+    def vid() -> str:
+        nonlocal nid
+        s = str(nid)
         nid += 1
-        id_map[eid] = cid
-        val = esc_attr(label)
-        st = esc_attr(cell_style(dependent=dep))
-        cells_xml.append(
-            f'        <mxCell id="{cid}" value="{val}" style="{st}" vertex="1" parent="1">\n'
-            f'          <mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" as="geometry"/>\n'
-            f"        </mxCell>"
-        )
+        return s
 
-    legend_cid = str(nid)
-    nid += 1
-    legend_text = (
-        "<div style='text-align:left;font-size:10px;'>"
-        "<b>IDEF1X (черновик для правки в Draw.io)</b><br/>"
-        "Прямые углы — независимые сущности; скругление — есть FK в атрибутах.<br/>"
-        "Пунктир — ненидентифицирующие связи; сплошная жирная — Судно → Рейс → Груз.<br/>"
-        "<font color='#64748b'>Источник: sql/deploy/02_schema.sql · генератор: docs/render_baltika_drawio.py</font>"
+    V: dict[str, str] = {}
+
+    def ent(key: str, x: float, y: float, w: float, h: float, title: str, attrs: list[str]) -> None:
+        nonlocal cells
+        i = vid()
+        V[key] = i
+        cells.append(cell_vertex(i, x, y, w, h, entity_value(title, attrs), STYLE_ENTITY))
+
+    def rel(key: str, x: float, y: float, w: float, h: float, name: str) -> None:
+        nonlocal cells
+        i = vid()
+        V[key] = i
+        cells.append(cell_vertex(i, x, y, w, h, f"<b>{html.escape(name)}</b>", STYLE_REL))
+
+    def edge(a: str, b: str, label: str = "", *, main: bool = False) -> None:
+        nonlocal edges
+        st = STYLE_EDGE_MAIN if main else STYLE_EDGE
+        edges.append(cell_edge(vid(), V[a], V[b], label, st))
+
+    # --- Координаты: центральная колонка — ядро; слева справочники и отправитель; справа получатель ---
+    ent("type", 30, 40, 128, 70, "Тип судна", ["наименование типа"])
+    rel("r_type", 188, 47, 96, 58, "относится\nк типу")
+    ent("ship", 310, 32, 208, 100, "Судно", ["рег. номер", "название", "вместимость, год, …"])
+
+    ent("dock", 30, 150, 128, 70, "Верфь", ["название", "страна"])
+    rel("r_dock", 188, 157, 96, 58, "построено\nна верфи")
+
+    ent("cap", 30, 260, 128, 76, "Капитан", ["ФИО", "стаж"])
+    rel("r_cap", 188, 267, 96, 58, "назначен\nна судно")
+
+    rel("r_perf", 360, 168, 108, 62, "выполняет\nрейс")
+    ent("shipment", 310, 280, 208, 100, "Рейс", ["даты следования", "таможня", "оформление"])
+
+    rel("r_inc", 360, 420, 108, 62, "включает\nгруз")
+    ent("cargo", 310, 520, 208, 104, "Груз", ["наименование партии", "стоимости", "количество"])
+
+    ent("sender", 30, 530, 144, 86, "Отправитель", ["наименование", "ИНН"])
+    rel("r_snd", 200, 542, 92, 56, "отправляет")
+    ent("consignee", 654, 530, 144, 86, "Получатель", ["наименование", "ИНН"])
+    rel("r_rcv", 586, 542, 92, 56, "получает")
+
+    ent("port", 310, 680, 208, 78, "Порт", ["название"])
+    rel("r_dep", 90, 600, 108, 58, "отправление\nиз порта")
+    rel("r_arr", 630, 600, 108, 58, "прибытие\nв порт")
+    rel("r_home", 360, 580, 108, 58, "приписка\nк порту")
+
+    ent("addr", 310, 820, 208, 68, "Адрес", ["территория", "населённый пункт", "улица, дом"])
+
+    ent("bank", 30, 660, 128, 68, "Банк", ["наименование"])
+    rel("r_bk_s", 200, 668, 88, 50, "обслуживает")
+    rel("r_bk_c", 710, 668, 88, 50, "обслуживает")
+
+    rel("r_as", 200, 760, 88, 50, "юр. адрес")
+    rel("r_ac", 710, 760, 88, 50, "юр. адрес")
+
+    ent("unit", 654, 660, 128, 68, "Ед. изм.", ["код", "условное обозначение"])
+    rel("r_unit", 586, 672, 96, 56, "измеряется\nв ед.")
+
+    rel("r_loc", 360, 780, 108, 58, "расположен\nпо адресу")
+
+    # --- Рёбра и кардинальности (у ромба: сторона сущности «многие» — N, сторона «один» — 1) ---
+    edge("ship", "r_type", "N")
+    edge("r_type", "type", "1")
+
+    edge("ship", "r_dock", "N")
+    edge("r_dock", "dock", "0..1")
+
+    edge("ship", "r_cap", "1")
+    edge("r_cap", "cap", "0..1")
+
+    edge("ship", "r_perf", "1", main=True)
+    edge("r_perf", "shipment", "N", main=True)
+
+    edge("shipment", "r_inc", "1", main=True)
+    edge("r_inc", "cargo", "N", main=True)
+
+    edge("cargo", "r_snd", "N")
+    edge("r_snd", "sender", "1")
+    edge("cargo", "r_rcv", "N")
+    edge("r_rcv", "consignee", "1")
+
+    edge("shipment", "r_dep", "N")
+    edge("r_dep", "port", "1")
+    edge("shipment", "r_arr", "N")
+    edge("r_arr", "port", "1")
+
+    edge("ship", "r_home", "N")
+    edge("r_home", "port", "1")
+
+    edge("port", "r_loc", "N")
+    edge("r_loc", "addr", "1")
+
+    edge("sender", "r_bk_s", "N")
+    edge("r_bk_s", "bank", "1")
+    edge("consignee", "r_bk_c", "N")
+    edge("r_bk_c", "bank", "1")
+
+    edge("sender", "r_as", "N")
+    edge("r_as", "addr", "1")
+    edge("consignee", "r_ac", "N")
+    edge("r_ac", "addr", "1")
+
+    edge("cargo", "r_unit", "N")
+    edge("r_unit", "unit", "1")
+
+    legend = (
+        "<div style='text-align:left;line-height:1.35;'>"
+        "<b>Концептуальная ER-модель (нотация Чена)</b><br/>"
+        "<b>Прямоугольник</b> — сущность предметной области; <b>ромб</b> — связь (глагол или краткое имя роли).<br/>"
+        "Подписи <b>1</b>, <b>N</b>, <b>0..1</b> на линиях — кардинальность и обязательность участия (классический ER).<br/>"
+        "Жирные линии — основная цепочка «Судно → Рейс → Груз». Источник смысла полей: sql/deploy/02_schema.sql.<br/>"
+        "<font color='#64748b'>Файл сгенерирован: docs/render_baltika_drawio.py</font>"
         "</div>"
     )
-    cells_xml.append(
-        f'        <mxCell id="{legend_cid}" value="{esc_attr(legend_text)}" '
-        f'style="{esc_attr("rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e0;align=left;verticalAlign=top;spacing=8;")}" '
-        f'vertex="1" parent="1">\n'
-        f'          <mxGeometry x="{legend_x}" y="{legend_y}" width="{legend_w}" height="{legend_h}" as="geometry"/>\n'
-        f"        </mxCell>"
+    cells.append(
+        cell_vertex(
+            vid(),
+            24,
+            930,
+            920,
+            120,
+            legend,
+            STYLE_LEGEND,
+        )
     )
 
-    # (source, target, solid, optional label)
-    edges: list[tuple[str, str, bool, str]] = [
-        ("addresses", "ports", False, ""),
-        ("banks", "senders", False, ""),
-        ("banks", "consignees", False, ""),
-        ("addresses", "senders", False, ""),
-        ("addresses", "consignees", False, ""),
-        ("ship_types", "ships", False, ""),
-        ("dockyards", "ships", False, ""),
-        ("captains", "ships", False, ""),
-        ("ports", "ships", False, "home_port_id"),
-        ("ports", "shipments", False, "origin / destination"),
-        ("ships", "shipments", True, ""),
-        ("shipments", "cargo", True, ""),
-        ("senders", "cargo", False, ""),
-        ("consignees", "cargo", False, ""),
-        ("units", "cargo", False, ""),
-    ]
+    inner = "\n".join(cells + edges)
+    page_w = 1100
+    page_h = 1080
 
-    for i, (a, b, solid, elab) in enumerate(edges):
-        eid = str(nid)
-        nid += 1
-        src = id_map[a]
-        tgt = id_map[b]
-        est = esc_attr(edge_style(solid=solid))
-        lbl = esc_attr(elab) if elab else ""
-        cells_xml.append(
-            f'        <mxCell id="{eid}" value="{lbl}" style="{est}" edge="1" parent="1" source="{src}" target="{tgt}">\n'
-            f'          <mxGeometry relative="1" as="geometry"/>\n'
-            f"        </mxCell>"
-        )
-
-    inner = "\n".join(cells_xml)
-    page_h = legend_y + legend_h + 60
-    pw = int(page_h * 0.6 + 400)
-    ph = int(page_h)
-
-    # Без textwrap.dedent: иначе общий префикс пробелов «ломает» отступы у <mxGeometry> внутри ячеек.
     out = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<mxfile host="app.diagrams.net" agent="BaltikaApp/render_baltika_drawio" version="22.1.0" type="device">\n'
-        '  <diagram id="baltika-idef1x" name="Балтика IDEF1X">\n'
+        '  <diagram id="baltika-conceptual-er" name="Балтика — концептуальная ER">\n'
         f'    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" '
-        f'fold="1" page="1" pageScale="1" pageWidth="{pw}" pageHeight="{ph}" math="0" shadow="0">\n'
-        '      <root>\n'
-        '        <mxCell id="0"/>\n'
-        '        <mxCell id="1" parent="0"/>\n'
+        f'fold="1" page="1" pageScale="1" pageWidth="{page_w}" pageHeight="{page_h}" math="0" shadow="0">\n'
+        "      <root>\n"
+        "        <mxCell id=\"0\"/>\n"
+        "        <mxCell id=\"1\" parent=\"0\"/>\n"
         f"{inner}\n"
         "      </root>\n"
         "    </mxGraphModel>\n"
@@ -255,8 +225,9 @@ def main() -> None:
         "</mxfile>\n"
     )
 
-    path = Path(__file__).with_name("Baltika_IDEF1X.drawio")
+    path = Path(__file__).with_name("Baltika_conceptual_ER.drawio")
     path.write_text(out, encoding="utf-8", newline="\n")
+    assert "Судно" in out and "выполняет" in out
     print("OK", path, path.stat().st_size)
 
 

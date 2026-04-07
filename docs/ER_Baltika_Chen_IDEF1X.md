@@ -174,22 +174,22 @@ python docs/render_IDEF1X_baltika_svg.py
 
 ### 2.5. Импорт в Draw.io (diagrams.net)
 
-Файл **[`Baltika_IDEF1X.drawio`](Baltika_IDEF1X.drawio)** — тот же состав таблиц и FK, что в `02_schema.sql`, в виде черновика для правки вручную:
+Файл **[`Baltika_conceptual_ER.drawio`](Baltika_conceptual_ER.drawio)** — **концептуальная** ER-модель (этап конструирования БД), **нотация Чена**: прямоугольники — сущности, ромбы — связи, на линиях — кардинальности **1 / N / 0..1**; без имён таблиц SQL и без полного списка полей. Смысл полей согласован с `02_schema.sql`.
 
 1. Откройте [app.diagrams.net](https://app.diagrams.net) → **File → Open from → Device…** (или перетащите `.drawio` в окно браузера).
-2. При необходимости пересоберите файл после правок скрипта: `python docs/render_baltika_drawio.py`.
-3. В редакторе можно развести пересекающиеся связи (**Waypoints** у рёбер), включить **View → Grid**, выровнять блоки (**Arrange → Align**), затем **File → Export as → PNG/PDF/SVG** для вставки в Word.
+2. Пересборка после правок скрипта: `python docs/render_baltika_drawio.py`.
+3. В редакторе при необходимости разведите пересечения (**Waypoints** у рёбер), **View → Grid**, **Arrange → Align**, затем **File → Export as → PNG/PDF/SVG** для Word.
 
-Связи на диаграмме заданы упрощённо (одна линия **порт → рейс** с подписью про `origin`/`destination`); при сдаче при желании разделите на две связи к одной таблице `ports`.
+Логическая (почти физическая) модель в нотации **IDEF1X** по таблицам — в [`IDEF1X_baltika.svg`](IDEF1X_baltika.svg) (скрипт `render_IDEF1X_baltika_svg.py`).
 
 ---
 
 ## 3. Экспорт в картинку
 
 - **Готовые SVG:** [`ER_conceptual_baltika.svg`](ER_conceptual_baltika.svg) (концептуальная ER), [`IDEF1X_baltika.svg`](IDEF1X_baltika.svg) (IDEF1X) — вставка в Word или открытие в браузере.
-- **Draw.io:** [`Baltika_IDEF1X.drawio`](Baltika_IDEF1X.drawio) — открыть в diagrams.net, отредактировать раскладку, экспортировать PNG/PDF/SVG.
+- **Draw.io (концептуальная ER):** [`Baltika_conceptual_ER.drawio`](Baltika_conceptual_ER.drawio) — нотация Чена, открыть в diagrams.net, при необходимости доработать раскладку, экспорт PNG/PDF/SVG.
 - **Из VS Code:** расширение «Markdown Preview Mermaid Support» → экспорт PDF/печать для блоков Mermaid выше.
 - **Онлайн:** [mermaid.live](https://mermaid.live) — вставьте блок из раздела 1.2 или 1.3 → PNG/SVG.
 - **Pandoc / Quarto:** рендер Markdown с Mermaid в PDF для пояснительной записки.
 
-Если нужен **строго** ромб Чена в одном файле без Mermaid — удобнее собрать схему в draw.io по таблицам раздела 2.
+Ромбы Чена в готовом виде — в **`Baltika_conceptual_ER.drawio`** (см. § 2.5).
